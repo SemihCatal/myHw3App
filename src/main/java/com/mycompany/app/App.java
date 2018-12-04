@@ -23,20 +23,7 @@ import spark.template.mustache.MustacheTemplateEngine;
 
 
 public class App {
-    
-    public static boolean search(ArrayList<String> array, String e) {
-        System.out.println("inside search");
-        if (array == null)
-            return false;
-
-        for (String elt : array) {
-            if (elt.equals(e))
-                return true;
-        }
-        return false;
-    }
-
-    public static void main(String[] args) {
+	public static void main(String[] args) {
         port(getHerokuAssignedPort());
 
         get("/", (req, res) -> "Semih CATAL 161101011 Bil481 Hw3");
@@ -44,7 +31,8 @@ public class App {
         post("/compute", (req, res) -> {
             // System.out.println(req.queryParams("input1"));
             // System.out.println(req.queryParams("input2"));
-        	 UserHandler userhandler = new UserHandler();
+        	App app = new App();
+        	 App.UserHandler userhandler = app.new UserHandler();
         	try {
                 File inputFile = new File("src\\main\\java\\com\\mycompany\\app\\EEAS.xml");
                 SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -78,7 +66,7 @@ public class App {
             //boolean result = App.search(inputList, input2AsStr);
 
             Map map = new HashMap();
-            map.put("result", result);
+            map.put("result", false);
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
 
@@ -88,14 +76,87 @@ public class App {
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
     }
+	
+	class UserHandler extends DefaultHandler {
+		private Entity entity;
+		private ArrayList<Entity> entList = new ArrayList<>();
+		String temp;
 
+		 boolean bFirstName = false;
+		  boolean bLastName = false;
+		  
+
+		   @Override
+		   public void startElement(String uri, 
+		   String localName, String qName, Attributes attributes) throws SAXException {
+
+		      if (qName.equalsIgnoreCase("name")) {
+		    	  entity = new Entity();
+		         String entity_ID = attributes.getValue("Entity_id");
+		         entity.setEntity_id(entity_ID);
+		         //System.out.println("EntityID : " + entity_ID);
+		      } else if (qName.equalsIgnoreCase("firstname")) {
+		         bFirstName = true;
+		      } else if (qName.equalsIgnoreCase("lastname")) {
+		         bLastName = true;
+		      }
+		      
+		   }
+
+		   @Override
+		   public void endElement(String uri, 
+		   String localName, String qName) throws SAXException {
+		      if (qName.equalsIgnoreCase("name")) {
+		         //System.out.println("End Element :" + qName);
+		         entList.add(entity);
+		      }
+		   }
+
+		   @Override
+		   public void characters(char ch[], int start, int length) throws SAXException {
+		      if (bFirstName) {
+		    	  temp = new String(ch, start, length);
+		    	  entity.setFname(temp);
+		          bFirstName = false;
+		      } else if (bLastName) {
+		    	  temp=new String(ch, start, length);
+		          entity.setLname(temp);
+		          bLastName = false;
+		      } 
+		      
+		      
+		   }
+		   
+		   public String searchList(String x) {
+			   StringBuilder sb = new StringBuilder();
+	       		Iterator<Entity> it = entList.iterator();
+	       		while(it.hasNext()) {
+	       			Entity entity = it.next();
+	       			if(entity.getFname().equals(x)) {
+	       				//System.out.println("Entity_ID: "+entity.getEntity_id());
+	       			    //System.out.println("First Name: "+entity.getFname());
+	       			    //System.out.println("Last Name: "+ entity.getLname()+"\n");
+	       				sb.append("Entity_ID: "+entity.getEntity_id());
+	       				sb.append("\nFirst Name: "+entity.getFname());
+	       				sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+	       			}
+	       		}
+	       		return sb.toString();
+	       }
+	
+	
     
+}
 
-    static int getHerokuAssignedPort() {
+	
+	
+	static int getHerokuAssignedPort() {
         ProcessBuilder processBuilder = new ProcessBuilder();
         if (processBuilder.environment().get("PORT") != null) {
             return Integer.parseInt(processBuilder.environment().get("PORT"));
         }
         return 4567; // return default port if heroku-port isn't set (i.e. on localhost)
     }
+	
 }
+
