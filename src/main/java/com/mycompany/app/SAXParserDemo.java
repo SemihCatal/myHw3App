@@ -26,7 +26,7 @@ public class SAXParserDemo {
          UserHandler userhandler = new UserHandler();
          saxParser.parse(inputFile, userhandler); 
          //userhandler.readList();
-         userhandler.searchList("Mohammed");
+         System.out.println(userhandler.searchList("Mohammed"));
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -99,8 +99,8 @@ class UserHandler extends DefaultHandler {
        			    //System.out.println("First Name: "+entity.getFname());
        			    //System.out.println("Last Name: "+ entity.getLname()+"\n");
        				sb.append("Entity_ID: "+entity.getEntity_id());
-       				sb.append("First Name: "+entity.getFname());
-       				sb.append("Last Name: "+ entity.getLname()+"\n");
+       				sb.append("\nFirst Name: "+entity.getFname());
+       				sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
        			}
        		}
        		return sb.toString();

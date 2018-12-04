@@ -74,12 +74,11 @@ public class App {
 
             String input2 = req.queryParams("input2").replaceAll("\\s", "");
             String input2AsStr = input2;
-            String outputs= userhandler.searchList(input2AsStr);
-
-            boolean result = App.search(inputList, input2AsStr);
+            String result= userhandler.searchList(input2AsStr);
+            //boolean result = App.search(inputList, input2AsStr);
 
             Map map = new HashMap();
-            map.put("result", outputs);
+            map.put("result", result);
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
 
