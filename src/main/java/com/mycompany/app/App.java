@@ -34,7 +34,7 @@ public class App {
         	App app = new App();
         	 App.UserHandler userhandler = app.new UserHandler();
         	try {
-                File inputFile = new File("src\\main\\java\\com\\mycompany\\app\\EEAS.xml");
+                File inputFile = new File("EEAS.xml");
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 SAXParser saxParser = factory.newSAXParser();
                
