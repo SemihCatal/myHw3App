@@ -66,7 +66,7 @@ public class App {
             //boolean result = App.search(inputList, input2AsStr);
 
             Map map = new HashMap();
-            map.put("result", false);
+            map.put("result", result);
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
 
