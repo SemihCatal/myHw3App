@@ -1,3 +1,5 @@
+package com.mycompany.app;
+
 
 
 import java.io.File;
@@ -18,7 +20,7 @@ public class SAXParserDemo {
    public static void main(String[] args) {
 
       try {
-         File inputFile = new File("EEAS.xml");
+         File inputFile = new File("src\\main\\java\\com\\mycompany\\app\\EEAS.xml");
          SAXParserFactory factory = SAXParserFactory.newInstance();
          SAXParser saxParser = factory.newSAXParser();
          UserHandler userhandler = new UserHandler();
@@ -87,16 +89,21 @@ class UserHandler extends DefaultHandler {
            }
        }
 	   
-	   public void searchList(String x) {
+	   public String searchList(String x) {
+		   StringBuilder sb = new StringBuilder();
        		Iterator<Entity> it = entList.iterator();
        		while(it.hasNext()) {
        			Entity entity = it.next();
        			if(entity.getFname().equals(x)) {
-       				System.out.println("Entity_ID: "+entity.getEntity_id());
-       			    System.out.println("First Name: "+entity.getFname());
-       			    System.out.println("Last Name: "+ entity.getLname()+"\n");
+       				//System.out.println("Entity_ID: "+entity.getEntity_id());
+       			    //System.out.println("First Name: "+entity.getFname());
+       			    //System.out.println("Last Name: "+ entity.getLname()+"\n");
+       				sb.append("Entity_ID: "+entity.getEntity_id());
+       				sb.append("First Name: "+entity.getFname());
+       				sb.append("Last Name: "+ entity.getLname()+"\n");
        			}
        		}
+       		return sb.toString();
        }
 
 

@@ -3,6 +3,16 @@ package com.mycompany.app;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,41 +23,19 @@ import spark.template.mustache.MustacheTemplateEngine;
 
 
 public class App {
-
-    public class Entity {
-        private String Fname;
-        private String Lname;
-        private String entity_id;
-        
-        public String getEntity_id() {
-            return entity_id;
-        }
-        public void setEntity_id(String entity_id) {
-            this.entity_id = entity_id;
-        }
-        public String getLname() {
-            return Lname;
-        }
-        public void setLname(String lname) {
-            Lname = lname;
-        }
-        public String getFname() {
-            return Fname;
-        }
-        public void setFname(String fname) {
-            Fname = fname;
-        }
-        
-        public String toString() {
-            StringBuffer sb = new StringBuffer();
-            sb.append("Entity ID "+ getEntity_id()+"\n");
-            sb.append("First Name "+ getFname()+"\n");
-            sb.append("Last name "+ getLname()+"\n");
-            return sb.toString();
-        }
-        
-    }
     
+    public static boolean search(ArrayList<String> array, String e) {
+        System.out.println("inside search");
+        if (array == null)
+            return false;
+
+        for (String elt : array) {
+            if (elt.equals(e))
+                return true;
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
 
@@ -56,24 +44,42 @@ public class App {
         post("/compute", (req, res) -> {
             // System.out.println(req.queryParams("input1"));
             // System.out.println(req.queryParams("input2"));
+        	 UserHandler userhandler = new UserHandler();
+        	try {
+                File inputFile = new File("src\\main\\java\\com\\mycompany\\app\\EEAS.xml");
+                SAXParserFactory factory = SAXParserFactory.newInstance();
+                SAXParser saxParser = factory.newSAXParser();
+               
+                saxParser.parse(inputFile, userhandler); 
+                //userhandler.readList();
+                //userhandler.searchList("Mohammed");
+             } catch (Exception e) {
+                e.printStackTrace();
+             }
+            
+
+           
 
             String input1 = req.queryParams("input1");
             java.util.Scanner sc1 = new java.util.Scanner(input1);
             sc1.useDelimiter("[;\r\n]+");
-            java.util.ArrayList<Integer> inputList = new java.util.ArrayList<>();
+            java.util.ArrayList<String> inputList = new java.util.ArrayList<>();
             while (sc1.hasNext()) {
-                int value = Integer.parseInt(sc1.next().replaceAll("\\s", ""));
+                String value = sc1.next().replaceAll("\\s", "");
                 inputList.add(value);
             }
             System.out.println(inputList);
+           
+            
 
             String input2 = req.queryParams("input2").replaceAll("\\s", "");
-            int input2AsInt = Integer.parseInt(input2);
+            String input2AsStr = input2;
+            String outputs= userhandler.searchList(input2AsStr);
 
-            boolean result = App.search(inputList, input2AsInt);
+            boolean result = App.search(inputList, input2AsStr);
 
             Map map = new HashMap();
-            map.put("result", result);
+            map.put("result", outputs);
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
 
@@ -83,6 +89,8 @@ public class App {
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
     }
+
+    
 
     static int getHerokuAssignedPort() {
         ProcessBuilder processBuilder = new ProcessBuilder();

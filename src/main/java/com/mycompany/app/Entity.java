@@ -1,3 +1,5 @@
+package com.mycompany.app;
+
 public class Entity {
     private String Fname;
     private String Lname;
