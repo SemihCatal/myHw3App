@@ -26,11 +26,9 @@ public class App {
 	public static void main(String[] args) {
         port(getHerokuAssignedPort());
 
-        get("/", (req, res) -> "Semih CATAL 161101011 Bil481 Hw3");
+        get("/", (req, res) -> "Semih CATAL 161101011 Bil481 Hw3\nAdd /compute to the end of the link to see the application");
 
         post("/compute", (req, res) -> {
-            // System.out.println(req.queryParams("input1"));
-            // System.out.println(req.queryParams("input2"));
         	App app = new App();
         	 App.UserHandler userhandler = app.new UserHandler();
         	try {
@@ -55,7 +53,7 @@ public class App {
 
         get("/compute", (rq, rs) -> {
             Map map = new HashMap();
-            map.put("result", "not computed yet!");
+            map.put("result", "");
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
     }
@@ -77,7 +75,6 @@ public class App {
 		    	  entity = new Entity();
 		         String entity_ID = attributes.getValue("Entity_id");
 		         entity.setEntity_id(entity_ID);
-		         //System.out.println("EntityID : " + entity_ID);
 		      } else if (qName.equalsIgnoreCase("firstname")) {
 		         bFirstName = true;
 		      } else if (qName.equalsIgnoreCase("lastname")) {
@@ -90,7 +87,6 @@ public class App {
 		   public void endElement(String uri, 
 		   String localName, String qName) throws SAXException {
 		      if (qName.equalsIgnoreCase("name")) {
-		         //System.out.println("End Element :" + qName);
 		         entList.add(entity);
 		      }
 		   }
