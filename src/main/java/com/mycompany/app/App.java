@@ -37,33 +37,16 @@ public class App {
                 File inputFile = new File("EEAS.xml");
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 SAXParser saxParser = factory.newSAXParser();
-               
                 saxParser.parse(inputFile, userhandler); 
-                //userhandler.readList();
-                //userhandler.searchList("Mohammed");
-             } catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
              }
             
-
-           
-
-            String input1 = req.queryParams("input1");
-            java.util.Scanner sc1 = new java.util.Scanner(input1);
-            sc1.useDelimiter("[;\r\n]+");
-            java.util.ArrayList<String> inputList = new java.util.ArrayList<>();
-            while (sc1.hasNext()) {
-                String value = sc1.next().replaceAll("\\s", "");
-                inputList.add(value);
-            }
-            System.out.println(inputList);
-           
+			String fname = req.queryParams("input1").replaceAll("\\s", "");
+            String lname = req.queryParams("input2").replaceAll("\\s", "");
             
-
-            String input2 = req.queryParams("input2").replaceAll("\\s", "");
-            String input2AsStr = input2;
-            String result= userhandler.searchList(input2AsStr);
-            //boolean result = App.search(inputList, input2AsStr);
+            String result= userhandler.searchList(fname,lname);
+           
 
             Map map = new HashMap();
             map.put("result", result);
@@ -127,22 +110,30 @@ public class App {
 		      
 		   }
 		   
-		   public String searchList(String x) {
-			   StringBuilder sb = new StringBuilder();
-	       		Iterator<Entity> it = entList.iterator();
-	       		while(it.hasNext()) {
-	       			Entity entity = it.next();
-	       			if(entity.getFname().equals(x)) {
-	       				//System.out.println("Entity_ID: "+entity.getEntity_id());
-	       			    //System.out.println("First Name: "+entity.getFname());
-	       			    //System.out.println("Last Name: "+ entity.getLname()+"\n");
-	       				sb.append("Entity_ID: "+entity.getEntity_id());
-	       				sb.append("\nFirst Name: "+entity.getFname());
-	       				sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
-	       			}
-	       		}
-	       		return sb.toString();
-	       }
+		   public String searchList(String fname,String lname) {
+			StringBuilder sb = new StringBuilder();
+				Iterator<Entity> it = entList.iterator();
+				while(it.hasNext()) {
+					Entity entity = it.next();
+					if(entity.getFname().equals(fname)&&(lname.length()==0)&&(fname.length()!=0)) {
+						sb.append("Entity_ID: "+entity.getEntity_id());
+						sb.append("\nFirst Name: "+entity.getFname());
+						sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+					  }
+					  else if (entity.getLname().equals(lname)&&(lname.length()!=0)&&fname.length()==0){
+						 sb.append("Entity_ID: "+entity.getEntity_id());
+						 sb.append("\nFirst Name: "+entity.getFname());
+						 sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+					  }
+					  else if(entity.getFname().equals(fname)&&entity.getLname().equals(lname)&&
+									  (fname.length()!=0)&&(lname.length()!=0)){
+						 sb.append("Entity_ID: "+entity.getEntity_id());
+						 sb.append("\nFirst Name: "+entity.getFname());
+						 sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+					  }
+				}
+				return sb.toString();
+		}
 	
 	
     

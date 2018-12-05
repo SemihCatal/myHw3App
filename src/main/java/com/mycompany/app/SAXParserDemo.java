@@ -20,13 +20,11 @@ public class SAXParserDemo {
    public static void main(String[] args) {
 
       try {
-         File inputFile = new File("src\\main\\java\\com\\mycompany\\app\\EEAS.xml");
+         File inputFile = new File("EEAS.xml");
          SAXParserFactory factory = SAXParserFactory.newInstance();
          SAXParser saxParser = factory.newSAXParser();
          UserHandler userhandler = new UserHandler();
          saxParser.parse(inputFile, userhandler); 
-         //userhandler.readList();
-         System.out.println(userhandler.searchList("Mohammed"));
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -89,19 +87,27 @@ class UserHandler extends DefaultHandler {
            }
        }
 	   
-	   public String searchList(String x) {
+	   public String searchList(String fname,String lname) {
 		   StringBuilder sb = new StringBuilder();
        		Iterator<Entity> it = entList.iterator();
        		while(it.hasNext()) {
        			Entity entity = it.next();
-       			if(entity.getFname().equals(x)) {
-       				//System.out.println("Entity_ID: "+entity.getEntity_id());
-       			    //System.out.println("First Name: "+entity.getFname());
-       			    //System.out.println("Last Name: "+ entity.getLname()+"\n");
+       			if(entity.getFname().equals(fname)&&(lname.length()==0)&&(fname.length()!=0)) {
        				sb.append("Entity_ID: "+entity.getEntity_id());
        				sb.append("\nFirst Name: "+entity.getFname());
        				sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
-       			}
+					 }
+					 else if (entity.getLname().equals(lname)&&(lname.length()!=0)&&fname.length()==0){
+						sb.append("Entity_ID: "+entity.getEntity_id());
+						sb.append("\nFirst Name: "+entity.getFname());
+						sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+					 }
+					 else if(entity.getFname().equals(fname)&&entity.getLname().equals(lname)&&
+					 				(fname.length()!=0)&&(lname.length()!=0)){
+						sb.append("Entity_ID: "+entity.getEntity_id());
+						sb.append("\nFirst Name: "+entity.getFname());
+						sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+					 }
        		}
        		return sb.toString();
        }
