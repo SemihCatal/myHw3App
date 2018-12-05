@@ -114,18 +114,21 @@ public class App {
 					if(entity.getFname().equals(fname)&&(lname.length()==0)&&(fname.length()!=0)) {
 						sb.append("Entity_ID: "+entity.getEntity_id());
 						sb.append("\nFirst Name: "+entity.getFname());
-						sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+						sb.append("\nLast Name: "+ entity.getLname()+"\n");
+						sb.append("_______________________________________________________________________________________________\n");
 					  }
 					  else if (entity.getLname().equals(lname)&&(lname.length()!=0)&&fname.length()==0){
 						 sb.append("Entity_ID: "+entity.getEntity_id());
 						 sb.append("\nFirst Name: "+entity.getFname());
-						 sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+						 sb.append("\nLast Name: "+ entity.getLname()+"\n");
+						 sb.append("_______________________________________________________________________________________________\n");
 					  }
 					  else if(entity.getFname().equals(fname)&&entity.getLname().equals(lname)&&
 									  (fname.length()!=0)&&(lname.length()!=0)){
 						 sb.append("Entity_ID: "+entity.getEntity_id());
 						 sb.append("\nFirst Name: "+entity.getFname());
-						 sb.append("\nLast Name: "+ entity.getLname()+"\n\n");
+						 sb.append("\nLast Name: "+ entity.getLname()+"\n");
+						 sb.append("_______________________________________________________________________________________________\n");
 					  }
 				}
 				return sb.toString();
